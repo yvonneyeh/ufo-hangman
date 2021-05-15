@@ -1,3 +1,4 @@
+import re
 import random
 import string 
 from ufo import ufo
@@ -59,12 +60,13 @@ def play(word):
         print(' '.join(current_codeword))
 
         guess = input('Please enter your guess: ').upper()
-        if guess in alphabet - guessed_letters:
+        # CORRECT LETTER
+        if guess in alphabet - guessed_letters: 
             guessed_letters.add(guess)
             if guess in word_letters:
                 word_letters.remove(guess)
                 print("Correct! You're closer to cracking the codeword.")
-
+            # INCORRECT LETTER
             else:
                 lives -= 1
                 attempts += 1 
