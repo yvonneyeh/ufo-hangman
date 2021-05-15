@@ -14,9 +14,6 @@ content = msg_file.read()
 msg_list = content.split("\n")
 msg_file.close()
 
-# print(noun_list)
-# print(msg_list)
-# print(ufo[0])
 
 def get_word():
     """ Randomly selects playable word from noun list. """
@@ -24,8 +21,16 @@ def get_word():
     word = random.choice(noun_list)
     while '-' in word or ' ' in word or word == '':
         word = random.choice(noun_list)
-    # print(word.upper())
+
     return word.upper()
+
+
+def get_message():
+    """ Show a random encouraging message when the user guesses an incorrect letter. """
+    
+    message = random.choice(msg_list)
+
+    return message
 
 
 def show_ufo(attempts):
@@ -34,61 +39,23 @@ def show_ufo(attempts):
     return ufo[attempts]
 
 
-# def play():
-#     word = get_word()
-#     word_letters = set(word)
-#     alphabet = set(string.ascii_uppercase)
-#     codeword = "_ " * len(word)
-#     guessed = False
-#     guessed_letters = set()
-#     attempts = 0
-#     lives = 6
-#     incorrect = None
-
-#     print("UFO: The Game")
-#     print("Instructions: save us from alien abduction by guessing letters in the codeword.")
-#     print("\n")
-#     print(show_ufo(attempts))
-#     print("\n")
-#     print("Incorrect Guesses:")
-#     print(None)
-#     print("\n")
-#     print("Codeword:")
-#     print(codeword)
-#     print("\n")
-
-
 def play(word):
     word_letters = set(word) # unique letters in target word
-    alphabet = set(string.ascii_uppercase)
-    codeword = "_ " * len(word)
-    guessed = False
+    alphabet = set(string.ascii_uppercase) # all valid playable letters
     guessed_letters = set() # letters guessed by user
     attempts = 0
     lives = 6
-    incorrect = None
 
     print("UFO: The Game")
     print("Instructions: save us from alien abduction by guessing letters in the codeword.")
-    # print("\n")
-    # print(show_ufo(attempts))
-    # print("\n")
-    # print("Incorrect Guesses:")
-    # print(None)
-    # print("\n")
-    # print("Codeword:")
-    # print(codeword)
-    # print("\n")
 
     while len(word_letters) > 0 and lives > 0:
 
         current_codeword = [letter if letter in guessed_letters else '_' for letter in word]
         print(show_ufo(attempts))
-        # print("\n")
         print("Incorrect Guesses:")
         print(' '.join(guessed_letters))
         print("Codeword:")
-        # print("\n")
         print(' '.join(current_codeword))
 
         guess = input('Please enter your guess: ').upper()
@@ -102,6 +69,7 @@ def play(word):
                 lives -= 1
                 attempts += 1 
                 print('\nIncorrect! The tractor beam pulls the person in further.')
+                print(get_message())
 
         elif guess in guessed_letters:
             print('\nYou can only guess that letter once, please try again.')
