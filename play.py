@@ -39,6 +39,8 @@ def show_ufo(attempts):
 
     return ufo[attempts]
 
+def guess():
+    pass
 
 def play(word):
     word_letters = set(word) # unique letters in target word
