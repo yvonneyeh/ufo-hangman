@@ -48,3 +48,8 @@ My original attempt to create this game is located in [`play.py`](https://github
 - Implement hash map for quicker runtime when determining which letters have been guessed already.
 - Determining difference between `word_letters` and `guessed_letters` currently in happens in O(n), to refactor this I would create a `valid_characters` set and remove letters as they are guessed to make the lookup O(1).
 - Additional unittests.
+
+
+### About the Developer
+
+[**Yvonne Yeh**](http://yvonneyeh.com/) is a software engineer from the Silicon Valley who has never seen the show. Curiosity, creativity, and a love of learning are at the root of everything Yvonne does. She loves that coding because it's an art form, it tickles her brain in the same spot as designing does. Before she learned how to code, she worked in K-12 education, design, and mental/physical fitness. Her personal coding journey began when she was learning alongside her 3rd grade students; she helped introduce **Hour of Code** and **Computer Science Week** into her school’s permanent curriculum. From there she dove into self-study with Scratch, CS50x, Python 4 Everybody, YouTube videos, and Codecademy. She is currently the **Chapter Leader** of [Codecademy's Silicon Valley Chapter](https://community.codecademy.com/silicon-valley/).
