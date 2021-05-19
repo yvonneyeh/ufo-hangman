@@ -23,8 +23,8 @@ STATUS_LOSE = "lose"
 STATUS_PLAYING = "playing"
 STATUS_CORRECT = "correct"
 STATUS_INCORRECT = "incorrect"
-STATUS_INVALID = 'invalid'
-STATUS_DUPE = 'duplicate'
+STATUS_INVALID = "invalid"
+STATUS_DUPE = "duplicate"
 
 # DEFAULT MESSAGES
 INTRO = "UFO: The Game\nInstructions: save us from alien abduction by guessing letters in the codeword."
@@ -99,6 +99,16 @@ class Game(object):
         print(' '.join(current_codeword))
 
 
+    def calculate_progress(self):
+        """ Future feature: more efficient runtime with dictionary implementation of current progress.  """
+        
+        # Something like:
+        # self.word = dict{'a': {index: [0, 2], guessed: false}}
+        # self.word = dict{0: {letter: a, guessed: false}}
+        # Rather than recalculating "current_codeword" every time, tracking differences would be easier
+        pass 
+
+
     def check_status(self):
         """ Check current gameplay status. """
 
@@ -108,11 +118,13 @@ class Game(object):
             raise ValueError("You already won!")         
 
         # Check for win or lose
-        if self.lives < 0:
+        if self.lives <= 0:
             self.status = STATUS_LOSE
         # If all letters guessed correctly
         if all([letter in self.guessed_letters for letter in self.word]):
             self.status = STATUS_WIN
+        
+        return self.status
 
 
     def retrieve_guess(self):
@@ -125,12 +137,12 @@ class Game(object):
 
     def process_guess(self, guess):
         """ Process a player's guess during the game. """
-
-        guess = guess.upper()
         
-        if len(guess) != 1:
+        if type(guess) != str or len(guess) != 1 or guess not in ALPHABET:
             print(INVALID_GUESS)
             return STATUS_INVALID
+
+        guess = guess.upper()
 
         if guess in self.guessed_letters:
             print(ALREADY_GUESSED)
@@ -144,6 +156,7 @@ class Game(object):
                 if all([letters in self.guessed_letters for letters in self.word]):
                 # if self.guessed_letters == self.word_letters:
                     # WINNING PLAY!
+                    self.status = STATUS_WIN
                     print(WIN_MSG, self.word)
                     return STATUS_WIN
                 print(CORRECT)
@@ -160,15 +173,19 @@ class Game(object):
         # len(word_letters) == 0 OR lives == 0
         if self.lives == 0:
             # LOSING PLAY ...
+            self.status = STATUS_LOSE
             print(show_ufo(self.attempts))
             print(LOSE_MSG, self.word)
             return STATUS_LOSE
 
+        else:
+            print(INVALID_GUESS)
+            return STATUS_INVALID
 
-def get_status(self):
-    """ Get the current status of gameplay. """
+    def get_status(self):
+        """ Get the current status of gameplay. """
 
-    return self.status
+        return self.status
 
 
 def play_game():
