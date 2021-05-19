@@ -3,6 +3,8 @@ import random
 import string 
 from ufo import ufo
 
+ALPHABET = set(string.ascii_uppercase)  # all valid playable letters
+
 # NOUN LIST
 noun_file = open("nouns.txt", "r")
 content = noun_file.read()
@@ -19,6 +21,17 @@ msg_file.close()
 STATUS_WIN = "win"
 STATUS_LOSE = "lose"
 STATUS_PLAYING = "playing"
+STATUS_CORRECT = "correct"
+STATUS_INCORRECT = "incorrect"
+
+# DEFAULT MESSAGES
+INTRO = "UFO: The Game\nInstructions: save us from alien abduction by guessing letters in the codeword."
+CORRECT = "Correct! You're closer to cracking the codeword."
+INCORRECT = "Incorrect! The tractor beam pulls the person in further."
+ALREADY_GUESSED = "You can only guess that letter once, please try again."
+INVALID_GUESS = "I cannot understand your input. Please guess a single letter."
+LOSE_MSG = "You lost! The UFO abducted the person! The codeword was:"
+WIN_MSG = "Correct! You saved the person and earned a medal of honor!\nThe codeword is:"
 
 
 def get_word():
@@ -61,24 +74,28 @@ class Game(object):
     def start():
         """ Display the title and instructions of the game """
 
-        print("UFO: The Game")
-        print("Instructions: save us from alien abduction by guessing letters in the codeword.")
+        print(INTRO)
 
 
     def play(self, word):
-    # def generate_gameboard(self, word):
-        """ Generate the gameboard during game play. """
+        """ Play UFO Hangman! """
 
         while len(self.word_letters) > 0 and self.lives > 0:
 
-            current_codeword = [letter if letter in self.guessed_letters else '_' for letter in word]
-            print(show_ufo(self.attempts))
-            print("Incorrect Guesses:")
-            print(' '.join(self.guessed_letters))
-            print("Codeword:")
-            print(' '.join(current_codeword))
-            guess = input('Please enter your guess: ').upper()
-            Game.process_guess(self, guess)
+            self.generate_gameboard(word)
+            guess = self.retrieve_guess()
+            self.process_guess(guess)
+
+
+    def generate_gameboard(self, word):
+        """ Generate the gameboard during game play. """
+
+        current_codeword = [letter if letter in self.guessed_letters else '_' for letter in word]
+        print(show_ufo(self.attempts))
+        print("Incorrect Guesses:")
+        print(' '.join(self.guessed_letters))
+        print("Codeword:")
+        print(' '.join(current_codeword))
 
 
     def check_status(self):
@@ -93,7 +110,7 @@ class Game(object):
         if self.lives < 0:
             self.status = STATUS_LOSE
         # If all letters guessed correctly
-        if all([l in self.guessed_letters for l in self.word]):
+        if all([letter in self.guessed_letters for letter in self.word]):
             self.status = STATUS_WIN
 
 
@@ -101,41 +118,46 @@ class Game(object):
         """ Get user input for a guess. """
         
         guess = input('Please enter your guess: ').upper()
-
+        
         return guess
 
 
     def process_guess(self, guess):
         """ Process a player's guess during the game. """
 
+        if len(guess) != 1:
+            print(INVALID_GUESS)
+
+        if guess in self.guessed_letters:
+            print(ALREADY_GUESSED)
+
         # CORRECT LETTER
-        if guess in self.alphabet - self.guessed_letters: 
+        if guess in ALPHABET - self.guessed_letters: 
             self.guessed_letters.add(guess)
             if guess in self.word_letters:
                 self.word_letters.remove(guess)
-                print("Correct! You're closer to cracking the codeword.")
+                if all([letters in self.guessed_letters for letters in self.word]):
+
+                # WINNING PLAY!
+                    print(WIN_MSG, self.word)
+                    return STATUS_WIN
+                print(CORRECT)
+                return STATUS_CORRECT
+
             # INCORRECT LETTER
             else:
                 self.lives -= 1
                 self.attempts += 1 
-                print('\nIncorrect! The tractor beam pulls the person in further.')
+                print(INCORRECT)
                 print(get_message())
-
-        elif guess in self.guessed_letters:
-            print('\nYou can only guess that letter once, please try again.')
-
-        else:
-            print('\nI cannot understand your input. Please guess a single letter.')
+                return STATUS_INCORRECT
 
         # len(word_letters) == 0 OR lives == 0
         if self.lives == 0:
             # LOSING PLAY ...
             print(show_ufo(self.attempts))
-            print('You lost! The UFO abducted the person! The codeword was', self.word)
-        if all([letters in self.guessed_letters for letters in self.word]):
-            # WINNING PLAY!
-            print('Correct! You saved the person and earned a medal of honor!')
-            print('The codeword is:', self.word)
+            print(LOSE_MSG, self.word)
+            return STATUS_LOSE
 
 
     def get_status(self):
@@ -148,6 +170,7 @@ def play_game():
     """ Initiate gameplay. """
 
     word = get_word()
+    print(word)
     UFO = Game(word)
     Game.start()
     Game.play(UFO, word)
