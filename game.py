@@ -23,6 +23,8 @@ STATUS_LOSE = "lose"
 STATUS_PLAYING = "playing"
 STATUS_CORRECT = "correct"
 STATUS_INCORRECT = "incorrect"
+STATUS_INVALID = 'invalid'
+STATUS_DUPE = 'duplicate'
 
 # DEFAULT MESSAGES
 INTRO = "UFO: The Game\nInstructions: save us from alien abduction by guessing letters in the codeword."
@@ -63,7 +65,6 @@ class Game(object):
 
     def __init__(self, word):
         self.word_letters = set(word) # unique letters in target word
-        self.alphabet = set(string.ascii_uppercase) # all valid playable letters
         self.guessed_letters = set() # letters guessed by player
         self.attempts = 0
         self.lives = 6
@@ -125,11 +126,15 @@ class Game(object):
     def process_guess(self, guess):
         """ Process a player's guess during the game. """
 
+        guess = guess.upper()
+        
         if len(guess) != 1:
             print(INVALID_GUESS)
+            return STATUS_INVALID
 
         if guess in self.guessed_letters:
             print(ALREADY_GUESSED)
+            return STATUS_DUPE
 
         # CORRECT LETTER
         if guess in ALPHABET - self.guessed_letters: 
@@ -137,8 +142,8 @@ class Game(object):
             if guess in self.word_letters:
                 self.word_letters.remove(guess)
                 if all([letters in self.guessed_letters for letters in self.word]):
-
-                # WINNING PLAY!
+                # if self.guessed_letters == self.word_letters:
+                    # WINNING PLAY!
                     print(WIN_MSG, self.word)
                     return STATUS_WIN
                 print(CORRECT)
@@ -160,17 +165,17 @@ class Game(object):
             return STATUS_LOSE
 
 
-    def get_status(self):
-        """ Get the current status of gameplay. """
+def get_status(self):
+    """ Get the current status of gameplay. """
 
-        return self.status
+    return self.status
 
 
 def play_game():
     """ Initiate gameplay. """
 
     word = get_word()
-    print(word)
+    # print(word)
     UFO = Game(word)
     Game.start()
     Game.play(UFO, word)
