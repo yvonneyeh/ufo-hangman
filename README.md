@@ -19,7 +19,7 @@ Invaders from outer space have arrived and are abducting humans using tractor be
 
 ```
 
-### Gameplay
+## Gameplay
 
 To play, run the following in your terminal:
 ```
@@ -28,7 +28,7 @@ python3 game.py
 
 Guess one letter at a time of a codeword represented by blank placeholders for each letter. If the letter does not exist in the codeword, the person is pulled in closer to the UFO by the tractor beam. If the letter exists, the blanks that correspond to the position of those letters in the codeword are replaced by the letter. If all the letters of the codeword are revealed before the person is pulled into the UFO, you win. Otherwise, the UFO abducts the person and you lose.
 
-### Game Rules
+## Game Rules
 
 - All valid codewords are chosen from [this dictionary of English words](https://github.com/Codecademy/internship-code-challenge/blob/master/backend/data/nouns.txt)
 - The codeword is represented by a series of dashes, one per letter in the codeword
@@ -40,7 +40,7 @@ Guess one letter at a time of a codeword represented by blank placeholders for e
 - You win when all the dashes in the codeword have been replaced by your correct guesses
 
 
-### Design
+## Design
 
 My original attempt to create this game is located in [`play.py`](https://github.com/yvonneyeh/ufo-hangman/blob/main/play.py), you can see that prior to refactoring, the code wasn't quite DRY and had some repitition in logic. I refactored the code to separate larger functions into smaller, more easily tested components.
 
@@ -50,6 +50,6 @@ My original attempt to create this game is located in [`play.py`](https://github
 - Additional unittests.
 
 
-### About the Developer
+## About the Developer
 
 [**Yvonne Yeh**](http://yvonneyeh.com/) is a software engineer from the Silicon Valley who has never seen the show. Curiosity, creativity, and a love of learning are at the root of everything Yvonne does. She loves that coding because it's an art form, it tickles her brain in the same spot as designing does. Before she learned how to code, she worked in K-12 education, design, and mental/physical fitness. Her personal coding journey began when she was learning alongside her 3rd grade students; she helped introduce **Hour of Code** and **Computer Science Week** into her school’s permanent curriculum. From there she dove into self-study with Scratch, CS50x, Python 4 Everybody, YouTube videos, and Codecademy. She is currently the **Chapter Leader** of [Codecademy's Silicon Valley Chapter](https://community.codecademy.com/silicon-valley/).
