@@ -67,6 +67,7 @@ class Game(object):
     def __init__(self, word):
         self.word_letters = set(word) # unique letters in target word
         self.guessed_letters = set() # letters guessed by player
+        self.remaining_letters = set(word) # difference between word_letters & guessed_letters
         self.attempts = 0
         self.lives = 6
         self.status = STATUS_PLAYING
@@ -82,7 +83,7 @@ class Game(object):
     def play(self, word):
         """ Play UFO Hangman! """
 
-        while len(self.word_letters) > 0 and self.lives > 0:
+        while len(self.remaining_letters) > 0 and self.lives > 0:
 
             self.generate_gameboard(word)
             guess = self.retrieve_guess()
@@ -107,6 +108,17 @@ class Game(object):
         # self.word = dict{'a': {index: [0, 2], guessed: false}}
         # self.word = dict{0: {letter: a, guessed: false}}
         # Rather than recalculating "current_codeword" every time, tracking differences would be easier
+        pass
+
+
+    def remove_guessed_letters(self, guess):
+        """ Future feature: check difference between word_letters and guessed_letters
+        for more efficient runtime with set implementation of letters remaining.  """
+
+        # remove guessed letters from remaining set instead of word set
+        # set(x) == set(y)
+        # remaining_letters == 0 –> every letter from word was guessed
+
         pass
 
 
@@ -152,9 +164,10 @@ class Game(object):
         # CORRECT LETTER
         if guess in ALPHABET - self.guessed_letters:
             self.guessed_letters.add(guess)
-            if guess in self.word_letters:
-                self.word_letters.remove(guess)
-                if all([letters in self.guessed_letters for letters in self.word]):
+            if guess in self.remaining_letters:
+                self.remaining_letters.remove(guess)
+                # all() function returns True if all items in an iterable are true
+                if all([letters in self.guessed_letters for letters in self.word_letters]):
                 # if self.guessed_letters == self.word_letters:
                     # WINNING PLAY!
                     self.status = STATUS_WIN
@@ -167,7 +180,7 @@ class Game(object):
             else:
                 self.lives -= 1
                 self.attempts += 1
-                # len(word_letters) == 0 OR lives == 0
+                # len(remaining_letters) == 0 OR lives == 0
                 if self.lives == 0:
                     # LOSING PLAY ...
                     self.status = STATUS_LOSE
